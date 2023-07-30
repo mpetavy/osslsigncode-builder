@@ -1,0 +1,26 @@
+ARG DOCKER_IMAGE=ubuntu:latest
+
+FROM $DOCKER_IMAGE as builder
+
+ARG OSSLSIGNCODE_VERSION=2.6
+
+WORKDIR /osslsigncode
+
+# Dependencies
+RUN apt update -y \
+    && apt install curl build-essential libssl-dev libcurl3-openssl-dev autoconf git python3 cmake -y \
+    && git clone https://github.com/mtrojnar/osslsigncode . \
+    && git checkout $OSSLSIGNCODE_VERSION \
+    && mkdir build \
+    && cd build \
+    && cmake -S .. \
+    && cmake --build .
+
+FROM $DOCKER_IMAGE
+
+RUN apt update -y \
+    && apt install curl -y
+
+COPY --from=0 /osslsigncode/build/osslsigncode ./
+
+ENTRYPOINT [ "./osslsigncode" ]
