@@ -1,4 +1,4 @@
-ARG DOCKER_IMAGE=ubuntu:latest
+ARG DOCKER_IMAGE=debian:bookworm-slim
 
 FROM $DOCKER_IMAGE as builder
 
