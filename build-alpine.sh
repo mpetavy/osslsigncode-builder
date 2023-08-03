@@ -17,7 +17,7 @@ docker image build --force-rm --rm  -t $APP --build-arg DOCKER_IMAGE=$DOCKER_IMA
 
 docker container create --name $APP-temp $APP
 
-docker cp $APP-temp:/osslsigncode $target/
+docker cp $APP-temp:/osslsigncode $target
 
 docker container rm $APP-temp
 docker image prune -f
