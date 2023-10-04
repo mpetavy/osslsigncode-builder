@@ -11,7 +11,7 @@ mkdir $target
 
 APP=osslsigncode
 DOCKER_IMAGE=debian:bookworm-slim
-OSSLSIGNCODE_VERSION=2.6
+OSSLSIGNCODE_VERSION=$(<osslsigncode-version.txt)
 
 docker image build --force-rm --rm  -t $APP --build-arg DOCKER_IMAGE=$DOCKER_IMAGE --build-arg OSSLSIGNCODE_VERSION=$OSSLSIGNCODE_VERSION -f ./Dockerfile-debian .
 

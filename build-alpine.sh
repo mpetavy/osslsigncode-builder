@@ -3,15 +3,15 @@
 set -e # stop on error in script
 set -x # log script steps to STDOUT
 
-export target=./bin-alpine
+target=./bin-alpine
 
 [ -d "$target" ] && rm -rf $target
 
 mkdir $target
 
-export APP=osslsigncode
-export DOCKER_IMAGE=alpine:latest
-export OSSLSIGNCODE_VERSION=2.6
+APP=osslsigncode
+DOCKER_IMAGE=alpine:latest
+OSSLSIGNCODE_VERSION=$(<osslsigncode-version.txt)
 
 docker image build --force-rm --rm  -t $APP --build-arg DOCKER_IMAGE=$DOCKER_IMAGE --build-arg OSSLSIGNCODE_VERSION=$OSSLSIGNCODE_VERSION -f ./Dockerfile-alpine .
 
