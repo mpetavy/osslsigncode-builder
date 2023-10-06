@@ -9,13 +9,13 @@ target=./bin-debian
 
 mkdir $target
 
-APP=osslsigncode
+APP=osslsigncode-debian
 DOCKER_IMAGE=debian:bookworm-slim
-OSSLSIGNCODE_VERSION=$(<osslsigncode-version.txt)
+OSSLSIGNCODE_VERSION=$(cat osslsigncode-version.txt)
 
-docker image build --force-rm --rm  -t $APP --build-arg DOCKER_IMAGE=$DOCKER_IMAGE --build-arg OSSLSIGNCODE_VERSION=$OSSLSIGNCODE_VERSION -f ./Dockerfile-debian .
+docker image build --force-rm --rm  -t $APP:$OSSLSIGNCODE_VERSION --build-arg DOCKER_IMAGE=$DOCKER_IMAGE --build-arg OSSLSIGNCODE_VERSION=$OSSLSIGNCODE_VERSION -f ./Dockerfile-debian .
 
-docker container create --name $APP-temp $APP
+docker container create --name $APP-temp $APP:$OSSLSIGNCODE_VERSION
 
 docker cp $APP-temp:/osslsigncode $target
 

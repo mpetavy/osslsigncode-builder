@@ -2,25 +2,29 @@ ARG DOCKER_IMAGE=debian:bookworm-slim
 
 FROM $DOCKER_IMAGE as builder
 
-ARG OSSLSIGNCODE_VERSION=2.6
+ARG OSSLSIGNCODE_VERSION
 
-WORKDIR /osslsigncode
+WORKDIR /work
 
 # Dependencies
 RUN apt update -y \
-    && apt install curl build-essential libssl-dev libcurl3-openssl-dev autoconf git python3 cmake -y \
-    && git clone https://github.com/mtrojnar/osslsigncode . \
+    && apt upgrade -y \
+    && apt install curl build-essential libssl-dev libcurl4-openssl-dev autoconf git python3 cmake zlib1g-dev -y \
+    && git clone https://github.com/mtrojnar/osslsigncode \
+    && cd osslsigncode \
     && git checkout $OSSLSIGNCODE_VERSION \
     && mkdir build \
     && cd build \
     && cmake -S .. \
-    && cmake --build .
+    && cmake --build . \
+    && chmod +x osslsigncode
 
 FROM $DOCKER_IMAGE
 
 RUN apt update -y \
+    && apt upgrade -y \
     && apt install curl -y
 
-COPY --from=0 /osslsigncode/build/osslsigncode ./
+COPY --from=builder /work/osslsigncode/build/osslsigncode .
 
 ENTRYPOINT [ "./osslsigncode" ]

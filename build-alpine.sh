@@ -9,13 +9,13 @@ target=./bin-alpine
 
 mkdir $target
 
-APP=osslsigncode
+APP=osslsigncode-alpine
 DOCKER_IMAGE=alpine:latest
-OSSLSIGNCODE_VERSION=$(<osslsigncode-version.txt)
+OSSLSIGNCODE_VERSION=$(cat osslsigncode-version.txt)
 
-docker image build --force-rm --rm  -t $APP --build-arg DOCKER_IMAGE=$DOCKER_IMAGE --build-arg OSSLSIGNCODE_VERSION=$OSSLSIGNCODE_VERSION -f ./Dockerfile-alpine .
+docker image build --force-rm --rm  -t $APP:$OSSLSIGNCODE_VERSION --build-arg DOCKER_IMAGE=$DOCKER_IMAGE --build-arg OSSLSIGNCODE_VERSION=$OSSLSIGNCODE_VERSION -f ./Dockerfile-alpine .
 
-docker container create --name $APP-temp $APP
+docker container create --name $APP-temp $APP:$OSSLSIGNCODE_VERSION
 
 docker cp $APP-temp:/osslsigncode $target
 
